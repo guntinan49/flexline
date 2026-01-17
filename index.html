@@ -3,38 +3,113 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LIFF Share Flex</title>
+  <title>LIFF Share Preview</title>
 
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
   <style>
     body {
       margin: 0;
-      font-family: sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #eef2ff;
+      height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      background: #eef2ff;
     }
+
+    /* ===== MODAL ===== */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .modal {
+      background: #fff;
+      width: 88%;
+      max-width: 360px;
+      border-radius: 22px;
+      padding: 20px;
+      text-align: center;
+      animation: pop .25s ease;
+    }
+
+    .modal img {
+      width: 100%;
+      border-radius: 16px;
+      margin-bottom: 12px;
+    }
+
+    .modal h2 {
+      margin: 8px 0 4px;
+    }
+
+    .modal p {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .actions button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 14px;
+      border: none;
+      font-size: 15px;
+    }
+
+    .cancel {
+      background: #eee;
+    }
+
+    .share {
+      background: #06c755;
+      color: white;
+    }
+
+    @keyframes pop {
+      from { transform: scale(.9); opacity: 0 }
+      to { transform: scale(1); opacity: 1 }
+    }
+
     .msg {
       display: none;
-      padding: 20px 30px;
       background: #fff;
+      padding: 20px 30px;
       border-radius: 16px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
       font-size: 18px;
       text-align: center;
-    }
-    #errorMsg {
-      color: #d9534f;
-      max-width: 80vw;
-      word-break: break-word;
     }
   </style>
 </head>
 
 <body>
+
+  <!-- PRE SHARE MODAL -->
+  <div class="overlay" id="shareModal" style="display:none">
+    <div class="modal">
+      <img src="https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter70850b2b0c3a2b52.gif">
+      <h2>📚 แนะนำหนังสือน่าอ่าน</h2>
+      <p>แชร์ให้เพื่อน ๆ ใน LINE ได้เลย</p>
+
+      <div class="actions">
+        <button class="cancel" onclick="closeModal()">ยกเลิก</button>
+        <button class="share" onclick="startShare()">แชร์เลย</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATUS -->
   <div class="msg" id="loadingMsg">⏳ กำลังเตรียมการแชร์…</div>
   <div class="msg" id="successMsg">✅ แชร์สำเร็จแล้ว</div>
   <div class="msg" id="errorMsg">❌ เกิดข้อผิดพลาด</div>
@@ -45,13 +120,20 @@
     document.getElementById(id).style.display = "block";
   }
 
+  function openModal() {
+    document.getElementById("shareModal").style.display = "flex";
+  }
+
+  function closeModal() {
+    liff.closeWindow();
+  }
+
   const flexMessage = {
     type: "flex",
     altText: "📚 แนะนำหนังสือน่าอ่าน",
     contents: {
       type: "carousel",
       contents: [
-
         {
           type: "bubble",
           hero: {
@@ -65,102 +147,33 @@
               uri: "https://liff.line.me/2008871423-5XU3Fbat"
             }
           }
-        },
-
-        {
-          type: "bubble",
-          hero: {
-            type: "image",
-            url: "https://img2.pic.in.th/1-ezgif.com-gif-to-apng-converter.gif",
-            size: "full",
-            aspectMode: "cover",
-            aspectRatio: "2.9:3",
-            action: {
-              type: "uri",
-              uri: "https://www.youtube.com/shorts/3I0VQcmHLQ0"
-            }
-          },
-          body: {
-            type: "box",
-            layout: "vertical",
-            backgroundColor: "#ffd54f",
-            contents: [
-              {
-                type: "text",
-                text: "ประวัติศาสตร์สหรัฐอเมริกาหลังสงครามโลกครั้งที่ 2",
-                weight: "bold",
-                wrap: true,
-                color: "#827717"
-              },
-              {
-                type: "text",
-                text: "แนะนำโดย : นตท.รัชชานนท์ หงษ์ทอง",
-                size: "sm",
-                wrap: true,
-                color: "#827717"
-              }
-            ]
-          }
-        },
-
-        {
-          type: "bubble",
-          hero: {
-            type: "image",
-            url: "https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter-1db9f184055e36d0a.gif",
-            size: "full",
-            aspectMode: "cover",
-            aspectRatio: "2.9:3",
-            action: {
-              type: "uri",
-              uri: "https://www.youtube.com/shorts/1yd61IVR1Hc"
-            }
-          },
-          body: {
-            type: "box",
-            layout: "vertical",
-            backgroundColor: "#ffd54f",
-            contents: [
-              {
-                type: "text",
-                text: "เก่งเรียนเซียนค้น กลยุทธ์พิชิตวิชากฎหมาย",
-                weight: "bold",
-                wrap: true,
-                color: "#827717"
-              },
-              {
-                type: "text",
-                text: "แนะนำโดย : นตท.กันตินันท์ ทองมะโน",
-                size: "sm",
-                wrap: true,
-                color: "#827717"
-              }
-            ]
-          }
         }
-
       ]
     }
   };
 
+  async function startShare() {
+    document.getElementById("shareModal").style.display = "none";
+    const result = await liff.shareTargetPicker([flexMessage]);
+    if (result) {
+      show("successMsg");
+      setTimeout(() => liff.closeWindow(), 1500);
+    } else {
+      liff.closeWindow();
+    }
+  }
+
   async function main() {
     try {
       show("loadingMsg");
-
       await liff.init({ liffId: "2008871423-5XU3Fbat" });
 
       if (!liff.isInClient()) {
         throw new Error("กรุณาเปิดผ่านแอป LINE");
       }
 
-      const result = await liff.shareTargetPicker([flexMessage]);
-
-      if (result) {
-        show("successMsg");
-        setTimeout(() => liff.closeWindow(), 1500);
-      } else {
-        liff.closeWindow();
-      }
+      document.getElementById("loadingMsg").style.display = "none";
+      openModal();
 
     } catch (e) {
       document.getElementById("errorMsg").innerText = "❌ " + e.message;
@@ -170,5 +183,6 @@
 
   main();
 </script>
+
 </body>
 </html>
