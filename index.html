@@ -1,233 +1,173 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LIFF Share</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LIFF Pro Share</title>
 
-<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <!-- LIFF SDK -->
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
-<style>
-:root{
-  --bg:#f4f5f9;
-  --text:#111;
-  --glass:rgba(0,0,0,.08);
-  --card:#fff;
-}
+  <style>
+    :root{
+      --glass-bg: rgba(255,255,255,.18);
+      --glass-border: rgba(255,255,255,.25);
+      --text-color: #fff;
+    }
 
-[data-theme="dark"]{
-  --bg:#0b0b0d;
-  --text:#fff;
-  --glass:rgba(255,255,255,.14);
-  --card:#141417;
-}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: system-ui, -apple-system;
+      color:var(--text-color);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
 
-*{box-sizing:border-box;font-family:system-ui,-apple-system}
+    /* ===== Background image ===== */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:
+        linear-gradient(to bottom,
+          rgba(0,0,0,.25),
+          rgba(0,0,0,.65)
+        ),
+        url("https://img5.pic.in.th/file/secure-sv1/D974F828-0E9A-4890-B927-851EC584584E.jpeg")
+        center top / cover no-repeat;
+      z-index:-2;
+    }
 
-body{
-  margin:0;
-  height:100vh;
-  background:var(--bg);
-  color:var(--text);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transition:.3s;
-}
+    /* Blur layer */
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background: rgba(0,0,0,.15);
+      z-index:-1;
+    }
 
-/* UI */
-#app{
-  width:100%;
-  max-width:420px;
-  padding:20px;
-}
+    /* ===== Glass card ===== */
+    .card{
+      width:min(90vw,420px);
+      background:var(--glass-bg);
+      border:1px solid var(--glass-border);
+      border-radius:20px;
+      padding:24px;
+      box-shadow:0 20px 40px rgba(0,0,0,.35);
+      text-align:center;
+      animation:fadeUp .6s ease;
+    }
 
-.card{
-  background:var(--card);
-  border-radius:18px;
-  overflow:hidden;
-  box-shadow:0 20px 50px rgba(0,0,0,.3);
-}
+    h1{
+      margin:0 0 10px;
+      font-size:22px;
+      letter-spacing:.5px;
+    }
 
-.card img{
-  width:100%;
-  display:block;
-}
+    p{
+      opacity:.9;
+      font-size:15px;
+    }
 
-.content{
-  padding:14px;
-}
+    button{
+      width:100%;
+      padding:14px;
+      margin-top:14px;
+      border-radius:14px;
+      border:none;
+      font-size:16px;
+      font-weight:600;
+      cursor:pointer;
+      background:#00c300;
+      color:#fff;
+      transition:.25s;
+    }
 
-.btn{
-  width:100%;
-  margin-top:12px;
-  padding:14px;
-  border:none;
-  border-radius:16px;
-  font-size:16px;
-  font-weight:600;
-  cursor:pointer;
-}
+    button:active{
+      transform:scale(.97);
+    }
 
-.primary{
-  background:#06c755;
-  color:#000;
-}
+    .mode{
+      display:flex;
+      gap:10px;
+      margin-top:16px;
+    }
 
-.secondary{
-  background:var(--glass);
-  color:var(--text);
-}
+    .mode button{
+      flex:1;
+      background:rgba(255,255,255,.25);
+      color:#fff;
+      font-size:14px;
+    }
 
-/* status */
-#status{
-  text-align:center;
-  opacity:.7;
-  font-size:14px;
-}
-
-/* theme btn */
-#themeBtn{
-  position:fixed;
-  top:14px;
-  right:14px;
-  border:none;
-  background:var(--glass);
-  padding:10px 12px;
-  border-radius:14px;
-  cursor:pointer;
-}
-</style>
+    @keyframes fadeUp{
+      from{opacity:0; transform:translateY(20px)}
+      to{opacity:1; transform:none}
+    }
+  </style>
 </head>
 
 <body>
 
-<button id="themeBtn">🌙</button>
-
-<div id="app">
   <div class="card">
-    <img src="https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter70850b2b0c3a2b52.gif">
-    <div class="content">
-      <b>📚 หนังสือน่าอ่าน</b>
-      <div style="font-size:14px;opacity:.7">แชร์ให้เพื่อนใน LINE</div>
+    <h1>📤 Share Flex Message</h1>
+    <p>หน้าพื้นหลังแบบมือโปร + LIFF</p>
+
+    <button onclick="share()">แชร์เลย</button>
+
+    <div class="mode">
+      <button onclick="setLight()">Light</button>
+      <button onclick="setDark()">Dark</button>
     </div>
   </div>
 
-  <button class="btn primary" id="shareBtn">แชร์ไป LINE</button>
-  <button class="btn secondary" onclick="liff.closeWindow()">ปิด</button>
-
-  <div id="status">⏳ กำลังเตรียมระบบ…</div>
-</div>
-
 <script>
-/* ================= THEME ================= */
-const media = window.matchMedia('(prefers-color-scheme: dark)');
-const themeBtn = document.getElementById("themeBtn");
+  const LIFF_ID = "YOUR_LIFF_ID";
 
-function applyTheme(t){
-  document.documentElement.setAttribute("data-theme",t);
-  themeBtn.textContent = t === "dark" ? "☀️" : "🌙";
-}
-
-function initTheme(){
-  const saved = localStorage.getItem("theme");
-  if(saved){
-    applyTheme(saved);
-  }else{
-    applyTheme(media.matches ? "dark" : "light");
-  }
-}
-
-themeBtn.onclick = ()=>{
-  const now = document.documentElement.getAttribute("data-theme");
-  const next = now === "dark" ? "light" : "dark";
-  localStorage.setItem("theme",next);
-  applyTheme(next);
-};
-
-media.addEventListener("change",e=>{
-  if(!localStorage.getItem("theme")){
-    applyTheme(e.matches ? "dark" : "light");
-  }
-});
-
-initTheme();
-
-/* ================= LIFF ================= */
-let liffReady = false;
-const status = document.getElementById("status");
-const shareBtn = document.getElementById("shareBtn");
-
-const flexMessage = {
-  type:"flex",
-  altText:"📚 แนะนำหนังสือน่าอ่าน",
-  contents:{
-    type:"bubble",
-    body:{
-      type:"box",
-      layout:"vertical",
-      contents:[
-        {
-          type:"image",
-          url:"https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter70850b2b0c3a2b52.gif",
-          size:"full",
-          aspectRatio:"2:3",
-          aspectMode:"cover"
-        }
-      ]
+  async function init(){
+    try{
+      await liff.init({ liffId: LIFF_ID });
+      if(!liff.isLoggedIn()){
+        liff.login();
+      }
+    }catch(e){
+      alert("LIFF error");
+      console.error(e);
     }
   }
-};
 
-async function initLIFF(){
-  try{
-    await Promise.race([
-      liff.init({ liffId:"YOUR_LIFF_ID" }),
-      new Promise((_,r)=>setTimeout(()=>r(new Error("timeout")),3000))
+  init();
+
+  function share(){
+    liff.shareTargetPicker([
+      {
+        type:"text",
+        text:"🔥 แชร์จาก LIFF มือโปร"
+      }
     ]);
-
-    if(!liff.isInClient()){
-      status.textContent = "❌ ต้องเปิดผ่านแอป LINE";
-      shareBtn.disabled = true;
-      return;
-    }
-
-    liffReady = true;
-    status.textContent = "✅ พร้อมแชร์แล้ว";
-
-  }catch(e){
-    status.textContent = "❌ เปิด LIFF ไม่สำเร็จ";
-    console.error(e);
-  }
-}
-
-shareBtn.onclick = async ()=>{
-  if(!liffReady){
-    alert("⏳ ระบบยังไม่พร้อม");
-    return;
   }
 
-  shareBtn.disabled = true;
-  status.textContent = "📤 กำลังเปิดหน้าต่างแชร์…";
-
-  try{
-    const res = await liff.shareTargetPicker([flexMessage]);
-    if(res){
-      status.textContent = "✅ แชร์สำเร็จ";
-      setTimeout(()=>liff.closeWindow(),1200);
-    }else{
-      status.textContent = "ℹ️ ยกเลิกการแชร์";
-      shareBtn.disabled = false;
-    }
-  }catch(e){
-    alert("❌ แชร์ไม่สำเร็จ");
-    console.error(e);
-    shareBtn.disabled = false;
-    status.textContent = "❌ เกิดข้อผิดพลาด";
+  /* ===== Mode control ===== */
+  function setDark(){
+    document.body.style.setProperty("--glass-bg","rgba(0,0,0,.35)");
+    document.body.style.setProperty("--glass-border","rgba(255,255,255,.15)");
   }
-};
 
-initLIFF();
+  function setLight(){
+    document.body.style.setProperty("--glass-bg","rgba(255,255,255,.25)");
+    document.body.style.setProperty("--glass-border","rgba(255,255,255,.35)");
+  }
+
+  /* Auto mode */
+  if(window.matchMedia("(prefers-color-scheme: light)").matches){
+    setLight();
+  }
 </script>
 
 </body>
