@@ -1,74 +1,95 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Premium Share</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium Share LIFF</title>
 
+<!-- LIFF SDK -->
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Font -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
+/* ================= THEME ================= */
 :root{
-  --line:#06c755;
-  --bg:#0b0b0d;
-  --glass:rgba(255,255,255,.08);
+  --bg:#f5f6fa;
+  --text:#111;
+  --glass:rgba(0,0,0,.08);
+  --card:#ffffff;
 }
 
-*{box-sizing:border-box;font-family:Inter,sans-serif}
+[data-theme="dark"]{
+  --bg:#0b0b0d;
+  --text:#ffffff;
+  --glass:rgba(255,255,255,.14);
+  --card:#141417;
+}
+
+*{
+  box-sizing:border-box;
+  font-family:Inter,sans-serif;
+}
 
 body{
   margin:0;
   height:100vh;
-  background:
-    radial-gradient(circle at top,#1b1b22,#050507);
+  background:var(--bg);
+  color:var(--text);
   display:flex;
   align-items:center;
   justify-content:center;
-  color:white;
+  transition:.35s ease;
 }
 
-/* ===== LOADING ===== */
+/* ================= LOADING ================= */
 #loading{
-  opacity:.8;
   font-size:16px;
+  opacity:.7;
 }
 
-/* ===== OVERLAY ===== */
+/* ================= THEME BUTTON ================= */
+#themeBtn{
+  position:fixed;
+  top:14px;
+  right:14px;
+  border:none;
+  padding:10px 14px;
+  border-radius:14px;
+  background:var(--glass);
+  color:var(--text);
+  font-size:16px;
+  cursor:pointer;
+}
+
+/* ================= OVERLAY ================= */
 .overlay{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.55);
+  background:rgba(0,0,0,.45);
   backdrop-filter:blur(18px);
   display:flex;
   align-items:flex-end;
   justify-content:center;
-  z-index:999;
 }
 
-/* ===== SHEET ===== */
+/* ================= SHEET ================= */
 .sheet{
   width:100%;
   max-width:420px;
   padding:20px;
-  border-radius:26px 26px 0 0;
-  background:linear-gradient(
-    180deg,
-    rgba(255,255,255,.18),
-    rgba(255,255,255,.04)
-  );
+  border-radius:28px 28px 0 0;
+  background:var(--glass);
   animation:up .45s cubic-bezier(.22,.9,.3,1);
 }
 
-/* ===== CARD ===== */
+/* ================= CARD ================= */
 .card{
+  background:var(--card);
   border-radius:20px;
   overflow:hidden;
-  background:black;
-  box-shadow:0 20px 60px rgba(0,0,0,.6);
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
 }
 
 .card img{
@@ -87,11 +108,10 @@ body{
 
 .desc{
   font-size:14px;
-  opacity:.75;
-  margin-top:4px;
+  opacity:.7;
 }
 
-/* ===== BUTTON ===== */
+/* ================= BUTTON ================= */
 .btn{
   width:100%;
   border:none;
@@ -105,24 +125,19 @@ body{
 
 .btn-primary{
   background:linear-gradient(135deg,#15ff7b,#06c755);
-  color:black;
+  color:#000;
 }
 
 .btn-secondary{
   background:var(--glass);
-  color:white;
+  color:var(--text);
 }
 
 .btn:active{
   transform:scale(.97);
 }
 
-/* ===== RESULT ===== */
-.result{
-  font-size:18px;
-  text-align:center;
-}
-
+/* ================= ANIMATION ================= */
 @keyframes up{
   from{transform:translateY(120%)}
   to{transform:translateY(0)}
@@ -132,17 +147,19 @@ body{
 
 <body>
 
-<div id="loading">⏳ Preparing experience…</div>
+<div id="loading">⏳ กำลังเตรียมประสบการณ์...</div>
 
-<!-- ===== SHARE SHEET ===== -->
+<button id="themeBtn">🌙</button>
+
+<!-- SHARE UI -->
 <div class="overlay" id="sheet" style="display:none">
   <div class="sheet">
 
     <div class="card">
       <img src="https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter70850b2b0c3a2b52.gif">
       <div class="content">
-        <div class="title">📚 หนังสือที่ควรอ่าน</div>
-        <div class="desc">ส่งต่อแรงบันดาลใจให้เพื่อนคุณ</div>
+        <div class="title">📚 หนังสือน่าอ่าน</div>
+        <div class="desc">แชร์แรงบันดาลใจให้เพื่อนคุณ</div>
       </div>
     </div>
 
@@ -153,7 +170,41 @@ body{
 </div>
 
 <script>
-const flex = {
+/* ================= THEME SYSTEM ================= */
+const media = window.matchMedia('(prefers-color-scheme: dark)');
+const btn = document.getElementById("themeBtn");
+
+function applyTheme(theme){
+  document.documentElement.setAttribute("data-theme",theme);
+  btn.textContent = theme === "dark" ? "☀️" : "🌙";
+}
+
+function initTheme(){
+  const saved = localStorage.getItem("theme");
+  if(saved){
+    applyTheme(saved);
+  }else{
+    applyTheme(media.matches ? "dark" : "light");
+  }
+}
+
+media.addEventListener("change",e=>{
+  if(!localStorage.getItem("theme")){
+    applyTheme(e.matches ? "dark" : "light");
+  }
+});
+
+btn.onclick = ()=>{
+  const current = document.documentElement.getAttribute("data-theme");
+  const next = current === "dark" ? "light" : "dark";
+  localStorage.setItem("theme",next);
+  applyTheme(next);
+};
+
+initTheme();
+
+/* ================= LIFF ================= */
+const flexMessage = {
   type:"flex",
   altText:"📚 แนะนำหนังสือน่าอ่าน",
   contents:{
@@ -182,9 +233,9 @@ async function init(){
 }
 
 async function share(){
-  await liff.shareTargetPicker([flex]);
+  await liff.shareTargetPicker([flexMessage]);
   document.body.innerHTML =
-    '<div class="result">✅ แชร์สำเร็จแล้ว</div>';
+    "<div style='font-size:18px'>✅ แชร์สำเร็จแล้ว</div>";
   setTimeout(()=>liff.closeWindow(),1200);
 }
 
