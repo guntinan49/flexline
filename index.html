@@ -1,51 +1,101 @@
 <script>
-const loadingMsg = document.getElementById("loadingMsg");
-const successMsg = document.getElementById("successMsg");
-const errorMsg   = document.getElementById("errorMsg");
-
-loadingMsg.style.display = "block";
-
 const flexMessage = {
   type: "flex",
   altText: "📚 แนะนำหนังสือน่าอ่าน โดย นตท.ชั้นปีที่ 2",
   contents: {
-    type: "bubble",
-    body: {
-      type: "box",
-      layout: "vertical",
-      contents: [
-        {
+    type: "carousel",
+    contents: [
+
+      {
+        type: "bubble",
+        hero: {
           type: "image",
           url: "https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter70850b2b0c3a2b52.gif",
           size: "full",
           aspectMode: "cover",
           aspectRatio: "2.3:3",
-          animated: true
+          action: {
+            type: "uri",
+            uri: "https://liff.line.me/2008871423-5XU3Fbat"
+          }
         }
-      ]
-    }
+      },
+
+      {
+        type: "bubble",
+        hero: {
+          type: "image",
+          url: "https://img2.pic.in.th/1-ezgif.com-gif-to-apng-converter.gif",
+          size: "full",
+          aspectMode: "cover",
+          aspectRatio: "2.9:3",
+          action: {
+            type: "uri",
+            uri: "https://www.youtube.com/shorts/3I0VQcmHLQ0"
+          }
+        },
+        body: {
+          type: "box",
+          layout: "vertical",
+          backgroundColor: "#ffd54f",
+          contents: [
+            {
+              type: "text",
+              text: "ชื่อหนังสือ ประวัติศาสตร์สหรัฐอเมริกาหลังสงครามโลกครั้งที่ 2",
+              weight: "bold",
+              size: "md",
+              color: "#827717",
+              wrap: true
+            },
+            {
+              type: "text",
+              text: "แนะนำโดย : นตท.รัชชานนท์ หงษ์ทอง",
+              size: "sm",
+              color: "#827717",
+              wrap: true
+            }
+          ]
+        }
+      },
+
+      {
+        type: "bubble",
+        hero: {
+          type: "image",
+          url: "https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter-1db9f184055e36d0a.gif",
+          size: "full",
+          aspectMode: "cover",
+          aspectRatio: "2.9:3",
+          action: {
+            type: "uri",
+            uri: "https://www.youtube.com/shorts/1yd61IVR1Hc"
+          }
+        },
+        body: {
+          type: "box",
+          layout: "vertical",
+          backgroundColor: "#ffd54f",
+          contents: [
+            {
+              type: "text",
+              text: "ชื่อหนังสือ เก่งเรียนเซียนค้น กลยุทธ์พิชิตวิชากฎหมาย",
+              weight: "bold",
+              size: "md",
+              color: "#827717",
+              wrap: true
+            },
+            {
+              type: "text",
+              text: "แนะนำโดย : นตท.กันตินันท์ ทองมะโน ตอน 18 เลขที่ 1",
+              size: "sm",
+              color: "#827717",
+              wrap: true
+            }
+          ]
+        }
+      }
+
+    ]
   }
 };
-
-async function main() {
-  try {
-    await liff.init({ liffId: "PUT_YOUR_LIFF_ID_HERE" });
-
-    if (!liff.isInClient()) {
-      throw new Error("กรุณาเปิดผ่านแอป LINE");
-    }
-
-    await liff.shareTargetPicker([flexMessage]);
-
-    loadingMsg.style.display = "none";
-    successMsg.style.display = "block";
-
-  } catch (err) {
-    loadingMsg.style.display = "none";
-    errorMsg.style.display = "block";
-    errorMsg.innerText = "❌ " + err.message;
-  }
-}
-
-main();
 </script>
