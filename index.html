@@ -1,66 +1,101 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Share Flex Message Ready</title>
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background: #eef2ff;
-        }
-        .msg {
-            display: none;
-            padding: 20px 30px;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            font-size: 18px;
-            text-align: center;
-            color: #333;
-        }
-        #errorMsg { 
-            color: #d9534f;
-            word-break: break-word;
-            max-width: 80vw;
-        }
-    </style>
-</head>
-<body>
-    <div class="msg" id="loadingMsg">⏳ กำลังเริ่มต้น LIFF และเตรียมการแชร์...</div>
-    <div class="msg" id="successMsg">✅ แชร์ให้เพื่อน ๆ สำเร็จแล้ว</div>
-    <div class="msg" id="errorMsg">❌ เกิดข้อผิดพลาดในการแชร์</div> 
+<script>
+const flexMessage = {
+  type: "flex",
+  altText: "📚 แนะนำหนังสือน่าอ่าน โดย นตท.ชั้นปีที่ 2",
+  contents: {
+    type: "carousel",
+    contents: [
 
-    <script>
-        // กำหนด Flex Message โครงสร้าง Carousel
-        const flexMessage = {
-            type: "flex",
-            altText: "📚 แนะนำหนังสือน่าอ่าน โดย นตท.ชั้นปีที่ 2",
-            contents: {
-                "type": "carousel",
-                "contents": [
-                    {
-                        "type": "bubble",
-                        "body": {
-                            "type": "box",
-                            "layout": "vertical",
-                            "contents": [
-                                {
-                                    "type": "image",
-                                    "url": "https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter70850b2b0c3a2b52.gif",
-                                    "size": "full",
-                                    "aspectMode": "cover",
-                                    "aspectRatio": "2.3:3",
-                                    "animated": true
-                                },
-                                {
-                                    "type": "button",
-                                    "action": {
-                                        "type": "uri",
-                                        "uri": "
+      {
+        type: "bubble",
+        hero: {
+          type: "image",
+          url: "https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter70850b2b0c3a2b52.gif",
+          size: "full",
+          aspectMode: "cover",
+          aspectRatio: "2.3:3",
+          action: {
+            type: "uri",
+            uri: "https://liff.line.me/2008871423-5XU3Fbat"
+          }
+        }
+      },
+
+      {
+        type: "bubble",
+        hero: {
+          type: "image",
+          url: "https://img2.pic.in.th/1-ezgif.com-gif-to-apng-converter.gif",
+          size: "full",
+          aspectMode: "cover",
+          aspectRatio: "2.9:3",
+          action: {
+            type: "uri",
+            uri: "https://www.youtube.com/shorts/3I0VQcmHLQ0"
+          }
+        },
+        body: {
+          type: "box",
+          layout: "vertical",
+          backgroundColor: "#ffd54f",
+          contents: [
+            {
+              type: "text",
+              text: "ชื่อหนังสือ ประวัติศาสตร์สหรัฐอเมริกาหลังสงครามโลกครั้งที่ 2",
+              weight: "bold",
+              size: "md",
+              color: "#827717",
+              wrap: true
+            },
+            {
+              type: "text",
+              text: "แนะนำโดย : นตท.รัชชานนท์ หงษ์ทอง",
+              size: "sm",
+              color: "#827717",
+              wrap: true
+            }
+          ]
+        }
+      },
+
+      {
+        type: "bubble",
+        hero: {
+          type: "image",
+          url: "https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter-1db9f184055e36d0a.gif",
+          size: "full",
+          aspectMode: "cover",
+          aspectRatio: "2.9:3",
+          action: {
+            type: "uri",
+            uri: "https://www.youtube.com/shorts/1yd61IVR1Hc"
+          }
+        },
+        body: {
+          type: "box",
+          layout: "vertical",
+          backgroundColor: "#ffd54f",
+          contents: [
+            {
+              type: "text",
+              text: "ชื่อหนังสือ เก่งเรียนเซียนค้น กลยุทธ์พิชิตวิชากฎหมาย",
+              weight: "bold",
+              size: "md",
+              color: "#827717",
+              wrap: true
+            },
+            {
+              type: "text",
+              text: "แนะนำโดย : นตท.กันตินันท์ ทองมะโน ตอน 18 เลขที่ 1",
+              size: "sm",
+              color: "#827717",
+              wrap: true
+            }
+          ]
+        }
+      }
+
+    ]
+  }
+};
+</script>
