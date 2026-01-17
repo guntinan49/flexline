@@ -1,56 +1,174 @@
-const flexMessage = {
-  type: "flex",
-  altText: "📚 แนะนำหนังสือน่าอ่าน โดย นตท.ชั้นปีที่ 2",
-  contents: {
-    type: "carousel",
-    contents: [
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LIFF Share Flex</title>
 
-      {
-        type: "bubble",
-        hero: {
-          type: "image",
-          url: "https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter70850b2b0c3a2b52.gif",
-          size: "full",
-          aspectMode: "cover",
-          aspectRatio: "2:3",
-          action: {
-            type: "uri",
-            uri: "https://liff.line.me/2008871423-5XU3Fbat"
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: #eef2ff;
+    }
+    .msg {
+      display: none;
+      padding: 20px 30px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      font-size: 18px;
+      text-align: center;
+    }
+    #errorMsg {
+      color: #d9534f;
+      max-width: 80vw;
+      word-break: break-word;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="msg" id="loadingMsg">⏳ กำลังเตรียมการแชร์…</div>
+  <div class="msg" id="successMsg">✅ แชร์สำเร็จแล้ว</div>
+  <div class="msg" id="errorMsg">❌ เกิดข้อผิดพลาด</div>
+
+<script>
+  function show(id) {
+    document.querySelectorAll(".msg").forEach(el => el.style.display = "none");
+    document.getElementById(id).style.display = "block";
+  }
+
+  const flexMessage = {
+    type: "flex",
+    altText: "📚 แนะนำหนังสือน่าอ่าน",
+    contents: {
+      type: "carousel",
+      contents: [
+
+        {
+          type: "bubble",
+          hero: {
+            type: "image",
+            url: "https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter70850b2b0c3a2b52.gif",
+            size: "full",
+            aspectMode: "cover",
+            aspectRatio: "2.3:3",
+            action: {
+              type: "uri",
+              uri: "https://liff.line.me/2008871423-5XU3Fbat"
+            }
           }
         },
-        body: {
-          type: "box",
-          layout: "vertical",
-          contents: []
+
+        {
+          type: "bubble",
+          hero: {
+            type: "image",
+            url: "https://img2.pic.in.th/1-ezgif.com-gif-to-apng-converter.gif",
+            size: "full",
+            aspectMode: "cover",
+            aspectRatio: "2.9:3",
+            action: {
+              type: "uri",
+              uri: "https://www.youtube.com/shorts/3I0VQcmHLQ0"
+            }
+          },
+          body: {
+            type: "box",
+            layout: "vertical",
+            backgroundColor: "#ffd54f",
+            contents: [
+              {
+                type: "text",
+                text: "ประวัติศาสตร์สหรัฐอเมริกาหลังสงครามโลกครั้งที่ 2",
+                weight: "bold",
+                wrap: true,
+                color: "#827717"
+              },
+              {
+                type: "text",
+                text: "แนะนำโดย : นตท.รัชชานนท์ หงษ์ทอง",
+                size: "sm",
+                wrap: true,
+                color: "#827717"
+              }
+            ]
+          }
+        },
+
+        {
+          type: "bubble",
+          hero: {
+            type: "image",
+            url: "https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter-1db9f184055e36d0a.gif",
+            size: "full",
+            aspectMode: "cover",
+            aspectRatio: "2.9:3",
+            action: {
+              type: "uri",
+              uri: "https://www.youtube.com/shorts/1yd61IVR1Hc"
+            }
+          },
+          body: {
+            type: "box",
+            layout: "vertical",
+            backgroundColor: "#ffd54f",
+            contents: [
+              {
+                type: "text",
+                text: "เก่งเรียนเซียนค้น กลยุทธ์พิชิตวิชากฎหมาย",
+                weight: "bold",
+                wrap: true,
+                color: "#827717"
+              },
+              {
+                type: "text",
+                text: "แนะนำโดย : นตท.กันตินันท์ ทองมะโน",
+                size: "sm",
+                wrap: true,
+                color: "#827717"
+              }
+            ]
+          }
         }
-      },
 
-      {
-        type: "bubble",
-        hero: {
-          type: "image",
-          url: "https://img2.pic.in.th/1-ezgif.com-gif-to-apng-converter.gif",
-          size: "full",
-          aspectMode: "cover",
-          aspectRatio: "2:3",
-          action: {
-            type: "uri",
-            uri: "https://www.youtube.com/shorts/3I0VQcmHLQ0"
-          }
-        },
-        body: {
-          type: "box",
-          layout: "vertical",
-          backgroundColor: "#ffd54f",
-          paddingAll: "12px",
-          contents: [
-            {
-              type: "text",
-              text: "ชื่อหนังสือ ประวัติศาสตร์สหรัฐอเมริกาหลังสงครามโลกครั้งที่ 2",
-              weight: "bold",
-              size: "md",
-              color: "#827717",
-              wrap: true
-            },
-            {
-              type: "text",
+      ]
+    }
+  };
+
+  async function main() {
+    try {
+      show("loadingMsg");
+
+      await liff.init({ liffId: "2008871423-5XU3Fbat" });
+
+      if (!liff.isInClient()) {
+        throw new Error("กรุณาเปิดผ่านแอป LINE");
+      }
+
+      const result = await liff.shareTargetPicker([flexMessage]);
+
+      if (result) {
+        show("successMsg");
+        setTimeout(() => liff.closeWindow(), 1500);
+      } else {
+        liff.closeWindow();
+      }
+
+    } catch (e) {
+      document.getElementById("errorMsg").innerText = "❌ " + e.message;
+      show("errorMsg");
+    }
+  }
+
+  main();
+</script>
+</body>
+</html>
