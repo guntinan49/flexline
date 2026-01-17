@@ -7,7 +7,7 @@
     <style>
         body {
             margin: 0;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-family: sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -19,7 +19,7 @@
             padding: 20px 30px;
             background: white;
             border-radius: 16px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             font-size: 18px;
             text-align: center;
             color: #333;
@@ -37,7 +37,7 @@
     <div class="msg" id="errorMsg">❌ เกิดข้อผิดพลาดในการแชร์</div> 
 
     <script>
-        // โครงสร้าง Flex Message ที่แก้ไข Syntax แล้ว
+        // แก้ไขโครงสร้าง Flex Message ให้ถูกต้องตาม Syntax ของ JavaScript
         const flexMessage = {
             type: "flex",
             altText: "📚 แนะนำหนังสือน่าอ่าน โดย นตท.ชั้นปีที่ 2",
@@ -62,27 +62,5 @@
                                     "type": "button",
                                     "action": {
                                         "type": "uri",
-                                        "uri": "http://linecorp.com/",
+                                        "uri": "https://liff.line.me/2008871423-5XU3Fbat",
                                         "label": " "
-                                    },
-                                    "position": "absolute",
-                                    "offsetTop": "60%",
-                                    "offsetEnd": "30%",
-                                    "offsetStart": "30%",
-                                    "offsetBottom": "30%"
-                                }
-                            ],
-                            "paddingAll": "none"
-                        }
-                    },
-                    {
-                        "type": "bubble",
-                        "hero": {
-                            "type": "image",
-                            "url": "https://img2.pic.in.th/1-ezgif.com-gif-to-apng-converter.gif",
-                            "size": "full",
-                            "aspectMode": "cover",
-                            "aspectRatio": "2.9:3",
-                            "animated": true,
-                            "action": {
-                                "type": "uri",
