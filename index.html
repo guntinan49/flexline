@@ -84,6 +84,7 @@ body{
   text-align:center;
   opacity:.7;
   font-size:14px;
+  margin-top:10px;
 }
 
 /* theme btn */
@@ -114,7 +115,7 @@ body{
   </div>
 
   <button class="btn primary" id="shareBtn">แชร์ไป LINE</button>
-  <button class="btn secondary" onclick="liff.closeWindow()">ปิด</button>
+  <button class="btn secondary" onclick="liff.isInClient() && liff.closeWindow()">ปิด</button>
 
   <div id="status">⏳ กำลังเตรียมระบบ…</div>
 </div>
@@ -159,20 +160,27 @@ const status = document.getElementById("status");
 const shareBtn = document.getElementById("shareBtn");
 
 const flexMessage = {
-  type:"flex",
-  altText:"📚 แนะนำหนังสือน่าอ่าน",
-  contents:{
-    type:"bubble",
-    body:{
-      type:"box",
-      layout:"vertical",
-      contents:[
+  type: "flex",
+  altText: "📚 แนะนำหนังสือน่าอ่าน",
+  contents: {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      contents: [
         {
-          type:"image",
-          url:"https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter70850b2b0c3a2b52.gif",
-          size:"full",
-          aspectRatio:"2:3",
-          aspectMode:"cover"
+          type: "image",
+          url: "https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter70850b2b0c3a2b52.gif",
+          size: "full",
+          aspectRatio: "2:3",
+          aspectMode: "cover"
+        },
+        {
+          type: "text",
+          text: "หนังสือน่าอ่านประจำสัปดาห์ 📚",
+          weight: "bold",
+          margin: "md",
+          align: "center"
         }
       ]
     }
@@ -182,8 +190,10 @@ const flexMessage = {
 async function initLIFF(){
   try{
     await Promise.race([
-      liff.init({ liffId:"YOUR_LIFF_ID" }),
-      new Promise((_,r)=>setTimeout(()=>r(new Error("timeout")),3000))
+      liff.init({ liffId: "2008871423-5XU3Fbat" }),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("LIFF init timeout")), 3000)
+      )
     ]);
 
     if(!liff.isInClient()){
@@ -196,8 +206,8 @@ async function initLIFF(){
     status.textContent = "✅ พร้อมแชร์แล้ว";
 
   }catch(e){
-    status.textContent = "❌ เปิด LIFF ไม่สำเร็จ";
     console.error(e);
+    status.textContent = "❌ เปิด LIFF ไม่สำเร็จ";
   }
 }
 
@@ -220,10 +230,10 @@ shareBtn.onclick = async ()=>{
       shareBtn.disabled = false;
     }
   }catch(e){
-    alert("❌ แชร์ไม่สำเร็จ");
     console.error(e);
-    shareBtn.disabled = false;
+    alert("❌ แชร์ไม่สำเร็จ");
     status.textContent = "❌ เกิดข้อผิดพลาด";
+    shareBtn.disabled = false;
   }
 };
 
