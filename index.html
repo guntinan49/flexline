@@ -1,195 +1,51 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Premium Share</title>
-
-<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
-<style>
-:root{
-  --line:#06c755;
-  --bg:#0b0b0d;
-  --glass:rgba(255,255,255,.08);
-}
-
-*{box-sizing:border-box;font-family:Inter,sans-serif}
-
-body{
-  margin:0;
-  height:100vh;
-  background:
-    radial-gradient(circle at top,#1b1b22,#050507);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:white;
-}
-
-/* ===== LOADING ===== */
-#loading{
-  opacity:.8;
-  font-size:16px;
-}
-
-/* ===== OVERLAY ===== */
-.overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.55);
-  backdrop-filter:blur(18px);
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-  z-index:999;
-}
-
-/* ===== SHEET ===== */
-.sheet{
-  width:100%;
-  max-width:420px;
-  padding:20px;
-  border-radius:26px 26px 0 0;
-  background:linear-gradient(
-    180deg,
-    rgba(255,255,255,.18),
-    rgba(255,255,255,.04)
-  );
-  animation:up .45s cubic-bezier(.22,.9,.3,1);
-}
-
-/* ===== CARD ===== */
-.card{
-  border-radius:20px;
-  overflow:hidden;
-  background:black;
-  box-shadow:0 20px 60px rgba(0,0,0,.6);
-}
-
-.card img{
-  width:100%;
-  display:block;
-}
-
-.content{
-  padding:14px 16px;
-}
-
-.title{
-  font-size:18px;
-  font-weight:700;
-}
-
-.desc{
-  font-size:14px;
-  opacity:.75;
-  margin-top:4px;
-}
-
-/* ===== BUTTON ===== */
-.btn{
-  width:100%;
-  border:none;
-  border-radius:18px;
-  padding:15px;
-  margin-top:12px;
-  font-size:16px;
-  font-weight:600;
-  cursor:pointer;
-}
-
-.btn-primary{
-  background:linear-gradient(135deg,#15ff7b,#06c755);
-  color:black;
-}
-
-.btn-secondary{
-  background:var(--glass);
-  color:white;
-}
-
-.btn:active{
-  transform:scale(.97);
-}
-
-/* ===== RESULT ===== */
-.result{
-  font-size:18px;
-  text-align:center;
-}
-
-@keyframes up{
-  from{transform:translateY(120%)}
-  to{transform:translateY(0)}
-}
-</style>
-</head>
-
-<body>
-
-<div id="loading">⏳ Preparing experience…</div>
-
-<!-- ===== SHARE SHEET ===== -->
-<div class="overlay" id="sheet" style="display:none">
-  <div class="sheet">
-
-    <div class="card">
-      <img src="https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter70850b2b0c3a2b52.gif">
-      <div class="content">
-        <div class="title">📚 หนังสือที่ควรอ่าน</div>
-        <div class="desc">ส่งต่อแรงบันดาลใจให้เพื่อนคุณ</div>
-      </div>
-    </div>
-
-    <button class="btn btn-primary" onclick="share()">แชร์ไป LINE</button>
-    <button class="btn btn-secondary" onclick="liff.closeWindow()">ยกเลิก</button>
-
-  </div>
-</div>
-
 <script>
-const flex = {
-  type:"flex",
-  altText:"📚 แนะนำหนังสือน่าอ่าน",
-  contents:{
-    type:"bubble",
-    body:{
-      type:"box",
-      layout:"vertical",
-      contents:[
+const loadingMsg = document.getElementById("loadingMsg");
+const successMsg = document.getElementById("successMsg");
+const errorMsg   = document.getElementById("errorMsg");
+
+loadingMsg.style.display = "block";
+
+const flexMessage = {
+  type: "flex",
+  altText: "📚 แนะนำหนังสือน่าอ่าน โดย นตท.ชั้นปีที่ 2",
+  contents: {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      contents: [
         {
-          type:"image",
-          url:"https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter70850b2b0c3a2b52.gif",
-          size:"full",
-          aspectRatio:"2:3",
-          aspectMode:"cover"
+          type: "image",
+          url: "https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter70850b2b0c3a2b52.gif",
+          size: "full",
+          aspectMode: "cover",
+          aspectRatio: "2.3:3",
+          animated: true
         }
       ]
     }
   }
 };
 
-async function init(){
-  await liff.init({ liffId:"YOUR_LIFF_ID" });
+async function main() {
+  try {
+    await liff.init({ liffId: "PUT_YOUR_LIFF_ID_HERE" });
 
-  document.getElementById("loading").style.display="none";
-  document.getElementById("sheet").style.display="flex";
+    if (!liff.isInClient()) {
+      throw new Error("กรุณาเปิดผ่านแอป LINE");
+    }
+
+    await liff.shareTargetPicker([flexMessage]);
+
+    loadingMsg.style.display = "none";
+    successMsg.style.display = "block";
+
+  } catch (err) {
+    loadingMsg.style.display = "none";
+    errorMsg.style.display = "block";
+    errorMsg.innerText = "❌ " + err.message;
+  }
 }
 
-async function share(){
-  await liff.shareTargetPicker([flex]);
-  document.body.innerHTML =
-    '<div class="result">✅ แชร์สำเร็จแล้ว</div>';
-  setTimeout(()=>liff.closeWindow(),1200);
-}
-
-init();
+main();
 </script>
-
-</body>
-</html>
