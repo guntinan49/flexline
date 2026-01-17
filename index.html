@@ -2,12 +2,13 @@
 <html>
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Share Flex Message Ready</title>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <style>
         body {
             margin: 0;
-            font-family: sans-serif;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -19,7 +20,7 @@
             padding: 20px 30px;
             background: white;
             border-radius: 16px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             font-size: 18px;
             text-align: center;
             color: #333;
@@ -37,7 +38,7 @@
     <div class="msg" id="errorMsg">❌ เกิดข้อผิดพลาดในการแชร์</div> 
 
     <script>
-        // แก้ไขโครงสร้าง Flex Message ให้ถูกต้องตาม Syntax ของ JavaScript
+        // กำหนด Flex Message โครงสร้าง Carousel
         const flexMessage = {
             type: "flex",
             altText: "📚 แนะนำหนังสือน่าอ่าน โดย นตท.ชั้นปีที่ 2",
@@ -52,15 +53,14 @@
                             "contents": [
                                 {
                                     "type": "image",
+                                    "url": "https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter70850b2b0c3a2b52.gif",
                                     "size": "full",
-                                    "animated": true,
                                     "aspectMode": "cover",
                                     "aspectRatio": "2.3:3",
-                                    "url": "https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter70850b2b0c3a2b52.gif"
+                                    "animated": true
                                 },
                                 {
                                     "type": "button",
                                     "action": {
                                         "type": "uri",
-                                        "uri": "https://liff.line.me/2008871423-5XU3Fbat",
-                                        "label": " "
+                                        "uri": "
