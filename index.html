@@ -1,187 +1,194 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LIFF Share Preview</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Premium Share</title>
 
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #eef2ff;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-    /* ===== MODAL ===== */
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.55);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-    }
+<style>
+:root{
+  --line:#06c755;
+  --bg:#0b0b0d;
+  --glass:rgba(255,255,255,.08);
+}
 
-    .modal {
-      background: #fff;
-      width: 88%;
-      max-width: 360px;
-      border-radius: 22px;
-      padding: 20px;
-      text-align: center;
-      animation: pop .25s ease;
-    }
+*{box-sizing:border-box;font-family:Inter,sans-serif}
 
-    .modal img {
-      width: 100%;
-      border-radius: 16px;
-      margin-bottom: 12px;
-    }
+body{
+  margin:0;
+  height:100vh;
+  background:
+    radial-gradient(circle at top,#1b1b22,#050507);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+}
 
-    .modal h2 {
-      margin: 8px 0 4px;
-    }
+/* ===== LOADING ===== */
+#loading{
+  opacity:.8;
+  font-size:16px;
+}
 
-    .modal p {
-      font-size: 14px;
-      color: #666;
-    }
+/* ===== OVERLAY ===== */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  backdrop-filter:blur(18px);
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  z-index:999;
+}
 
-    .actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 16px;
-    }
+/* ===== SHEET ===== */
+.sheet{
+  width:100%;
+  max-width:420px;
+  padding:20px;
+  border-radius:26px 26px 0 0;
+  background:linear-gradient(
+    180deg,
+    rgba(255,255,255,.18),
+    rgba(255,255,255,.04)
+  );
+  animation:up .45s cubic-bezier(.22,.9,.3,1);
+}
 
-    .actions button {
-      flex: 1;
-      padding: 12px;
-      border-radius: 14px;
-      border: none;
-      font-size: 15px;
-    }
+/* ===== CARD ===== */
+.card{
+  border-radius:20px;
+  overflow:hidden;
+  background:black;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+}
 
-    .cancel {
-      background: #eee;
-    }
+.card img{
+  width:100%;
+  display:block;
+}
 
-    .share {
-      background: #06c755;
-      color: white;
-    }
+.content{
+  padding:14px 16px;
+}
 
-    @keyframes pop {
-      from { transform: scale(.9); opacity: 0 }
-      to { transform: scale(1); opacity: 1 }
-    }
+.title{
+  font-size:18px;
+  font-weight:700;
+}
 
-    .msg {
-      display: none;
-      background: #fff;
-      padding: 20px 30px;
-      border-radius: 16px;
-      font-size: 18px;
-      text-align: center;
-    }
-  </style>
+.desc{
+  font-size:14px;
+  opacity:.75;
+  margin-top:4px;
+}
+
+/* ===== BUTTON ===== */
+.btn{
+  width:100%;
+  border:none;
+  border-radius:18px;
+  padding:15px;
+  margin-top:12px;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.btn-primary{
+  background:linear-gradient(135deg,#15ff7b,#06c755);
+  color:black;
+}
+
+.btn-secondary{
+  background:var(--glass);
+  color:white;
+}
+
+.btn:active{
+  transform:scale(.97);
+}
+
+/* ===== RESULT ===== */
+.result{
+  font-size:18px;
+  text-align:center;
+}
+
+@keyframes up{
+  from{transform:translateY(120%)}
+  to{transform:translateY(0)}
+}
+</style>
 </head>
 
 <body>
 
-  <!-- PRE SHARE MODAL -->
-  <div class="overlay" id="shareModal" style="display:none">
-    <div class="modal">
-      <img src="https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter70850b2b0c3a2b52.gif">
-      <h2>📚 แนะนำหนังสือน่าอ่าน</h2>
-      <p>แชร์ให้เพื่อน ๆ ใน LINE ได้เลย</p>
+<div id="loading">⏳ Preparing experience…</div>
 
-      <div class="actions">
-        <button class="cancel" onclick="closeModal()">ยกเลิก</button>
-        <button class="share" onclick="startShare()">แชร์เลย</button>
+<!-- ===== SHARE SHEET ===== -->
+<div class="overlay" id="sheet" style="display:none">
+  <div class="sheet">
+
+    <div class="card">
+      <img src="https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter70850b2b0c3a2b52.gif">
+      <div class="content">
+        <div class="title">📚 หนังสือที่ควรอ่าน</div>
+        <div class="desc">ส่งต่อแรงบันดาลใจให้เพื่อนคุณ</div>
       </div>
     </div>
-  </div>
 
-  <!-- STATUS -->
-  <div class="msg" id="loadingMsg">⏳ กำลังเตรียมการแชร์…</div>
-  <div class="msg" id="successMsg">✅ แชร์สำเร็จแล้ว</div>
-  <div class="msg" id="errorMsg">❌ เกิดข้อผิดพลาด</div>
+    <button class="btn btn-primary" onclick="share()">แชร์ไป LINE</button>
+    <button class="btn btn-secondary" onclick="liff.closeWindow()">ยกเลิก</button>
+
+  </div>
+</div>
 
 <script>
-  function show(id) {
-    document.querySelectorAll(".msg").forEach(el => el.style.display = "none");
-    document.getElementById(id).style.display = "block";
-  }
-
-  function openModal() {
-    document.getElementById("shareModal").style.display = "flex";
-  }
-
-  function closeModal() {
-    liff.closeWindow();
-  }
-
-  const flexMessage = {
-    type: "flex",
-    altText: "📚 แนะนำหนังสือน่าอ่าน",
-    contents: {
-      type: "carousel",
-      contents: [
+const flex = {
+  type:"flex",
+  altText:"📚 แนะนำหนังสือน่าอ่าน",
+  contents:{
+    type:"bubble",
+    body:{
+      type:"box",
+      layout:"vertical",
+      contents:[
         {
-          type: "bubble",
-          hero: {
-            type: "image",
-            url: "https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter70850b2b0c3a2b52.gif",
-            size: "full",
-            aspectMode: "cover",
-            aspectRatio: "2.3:3",
-            action: {
-              type: "uri",
-              uri: "https://liff.line.me/2008871423-5XU3Fbat"
-            }
-          }
+          type:"image",
+          url:"https://img5.pic.in.th/file/secure-sv1/ezgif.com-gif-to-apng-converter70850b2b0c3a2b52.gif",
+          size:"full",
+          aspectRatio:"2:3",
+          aspectMode:"cover"
         }
       ]
     }
-  };
-
-  async function startShare() {
-    document.getElementById("shareModal").style.display = "none";
-    const result = await liff.shareTargetPicker([flexMessage]);
-    if (result) {
-      show("successMsg");
-      setTimeout(() => liff.closeWindow(), 1500);
-    } else {
-      liff.closeWindow();
-    }
   }
+};
 
-  async function main() {
-    try {
-      show("loadingMsg");
-      await liff.init({ liffId: "2008871423-5XU3Fbat" });
+async function init(){
+  await liff.init({ liffId:"YOUR_LIFF_ID" });
 
-      if (!liff.isInClient()) {
-        throw new Error("กรุณาเปิดผ่านแอป LINE");
-      }
+  document.getElementById("loading").style.display="none";
+  document.getElementById("sheet").style.display="flex";
+}
 
-      document.getElementById("loadingMsg").style.display = "none";
-      openModal();
+async function share(){
+  await liff.shareTargetPicker([flex]);
+  document.body.innerHTML =
+    '<div class="result">✅ แชร์สำเร็จแล้ว</div>';
+  setTimeout(()=>liff.closeWindow(),1200);
+}
 
-    } catch (e) {
-      document.getElementById("errorMsg").innerText = "❌ " + e.message;
-      show("errorMsg");
-    }
-  }
-
-  main();
+init();
 </script>
 
 </body>
